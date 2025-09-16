@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react';
 import {pages} from '../../pages';
 import {Route ,Routes } from 'react-router-dom'
-import AppSide_M from '../AppSide_M';
+// import AppSide_M from '../AppSide_M';
 import AppScroll from '../AppScroll';
 const AppMain = () => {
      const [isMobile,setIsMobile] =  useState(false);

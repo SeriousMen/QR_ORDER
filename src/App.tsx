@@ -3,19 +3,16 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { pages } from './pages'
+import {AppMain,AppHeader,AppFooter} from './layouts';
+
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
     <>
-      <BrowserRouter>
-      <Routes>
-        {pages.map(({path,element}) =>(
-          <Route key ={path} path={path} element={element}/>
-        ))}
-         
-      </Routes>
+      <BrowserRouter>    
+        <AppHeader/>
+        <AppMain/>
+        <AppFooter/>
       </BrowserRouter>
     </>
   )
