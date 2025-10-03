@@ -56,9 +56,11 @@ const AppScroll = () => {
           <section
             key={idx}
             ref={(el) => {sectionRefs.current[idx] = el}}
-            className="h-screen flex items-center justify-center text-4xl border"
+            className="h-screen  items-center justify-center text-4xl border"
           >
-            {page.title} 
+            <div className='border-2 border-solid'>{page.title}</div>
+            <div className='border-2 border-solid'>{page.element}</div>
+            
           </section>
         ))}
       </div>

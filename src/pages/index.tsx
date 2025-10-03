@@ -1,6 +1,6 @@
 import type {ReactNode } from 'react';
 import Main from './Main';
-import Menu from './Menu';
+import Dish from './Dish';
 
 interface Page {
     title:string;
@@ -10,6 +10,6 @@ interface Page {
 
 export const pages :Page[] = [
     {title:'Home',path:'/', element:<Main/>},
-    {title:'Menu',path:'/Menu', element:<Menu/>},
-    {title:'Drink',path:'/Drink', element:<Menu/>},
+    {title:'Dish',path:'/Dish', element:<Dish/>},
+    {title:'Drink',path:'/Drink', element:<Dish/>},
 ]
