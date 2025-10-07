@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { collection, doc, getDoc,getDocs ,query,where } from "firebase/firestore";
 import { db } from "../firebase-config";
 
@@ -19,7 +19,10 @@ import { db } from "../firebase-config";
 const Main = () =>{
     const [introduce, setIntroduce] = useState<string>("");
     console.log("렌더main");
+     const fetchedRef = useRef(false);
     useEffect(()=>{
+        if(fetchedRef.current) return;
+        fetchedRef.current = true;
         const fetchInfo = async () =>{
             try{
                 //query를 이용해서 특정 조건으로 찾을때(자동키로 만들어진 문서를 찾을때)

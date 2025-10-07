@@ -64,6 +64,9 @@
 - 기업 레거시/ 대규모: Redux
 - 서버데이터 : React Query 
 
+## 해당 프로젝트 상태관리
+- Zustand/ React Query
+
 ## 데이터 베이스
 관계형 데이터베이스(SQL) VS 비관계형 데이터베이스(NoSQL)
 
