@@ -1,0 +1,1 @@
+서버 통신 로직 (URL, HTTP 요청, queryFn 함수) 저장.

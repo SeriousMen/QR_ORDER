@@ -1,7 +1,5 @@
-import { useEffect, useState,useRef } from "react";
-import { collection, doc, getDoc, getDocs ,query,where } from "firebase/firestore";
-import { db } from "../firebase-config";
 import {useQuery} from  '@tanstack/react-query';
+import {fetchShopInfo} from '../api/shopApi';
 
 /**
 주의할 점 fireStore는 호출 단위로 인해 요금이 과금된다.
@@ -15,23 +13,7 @@ import {useQuery} from  '@tanstack/react-query';
  * 
  */
 
-const fetchShopInfo = async () =>{
-    const resultFireQuery = query(
-                    collection(db,"shops"),
-                    where("key", "==", 1)
-                );
 
-    const snapshot = await getDocs(resultFireQuery);
-    console.log("fetchShopInfo");
-    if(snapshot.empty) {
-        throw new Error("No doc found");
-    }
-
-      const firstDoc = snapshot.docs[0];
-
-      return firstDoc.data();
-
-}
 
 const Main = () =>{
 
@@ -45,9 +27,10 @@ const Main = () =>{
         error
     } = useQuery({
         queryKey : ['shopInfo',1], // 원래 하드코딩 안함 변수로 지정해서 queryKey가 바뀌면 다시 queryFn를 호출해서 리패치함
-        queryFn :fetchShopInfo,
+        queryFn :()=>fetchShopInfo(1),
         refetchOnMount: false,           // 다시 마운트돼도 refetch 안 함
         refetchOnWindowFocus: false,     // 탭 다시 활성화돼도 refetch 안 함
+        // staleTime: 1000 * 60     // 1분동안 재 렌더링시에 refetch 안함
     });
     
   
