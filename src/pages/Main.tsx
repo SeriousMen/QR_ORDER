@@ -1,11 +1,9 @@
 import { useEffect, useState,useRef } from "react";
-import { collection, doc, getDoc,getDocs ,query,where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs ,query,where } from "firebase/firestore";
 import { db } from "../firebase-config";
+import {useQuery} from  '@tanstack/react-query';
 
 /**
- * 
- * @returns 
- 
 주의할 점 fireStore는 호출 단위로 인해 요금이 과금된다.
 읽기(read): 문서 1개를 읽으면 1건(getDoc) 호출 횟수가 아님...
 
@@ -16,61 +14,51 @@ import { db } from "../firebase-config";
 무료 요금: 월 5만 건 읽기, 5만 건 쓰기, 1GB 저장 등
  * 
  */
-const Main = () =>{
-    const [introduce, setIntroduce] = useState<string>("");
-    console.log("렌더main");
-     const fetchedRef = useRef(false);
-    useEffect(()=>{
-        if(fetchedRef.current) return;
-        fetchedRef.current = true;
-        const fetchInfo = async () =>{
-            try{
-                //query를 이용해서 특정 조건으로 찾을때(자동키로 만들어진 문서를 찾을때)
-                
-                //최상위 컬렉션 조회중에 where 조건을 가진 문서 조회
-                const resultQuery = query(
+
+const fetchShopInfo = async () =>{
+    const resultFireQuery = query(
                     collection(db,"shops"),
                     where("key", "==", 1)
                 );
-                const snapshot = await getDocs(resultQuery);
-                    console.log("snapshot",snapshot);
-               if(!snapshot.empty){
-                //결과가 하나만 올 것을 알고있기 때문에 아래처럼 가능
-                const firstDoc = snapshot.docs[0];
 
-                //문서 전체 필드 가져온다. 
-                const data = firstDoc.data();
-                if(data){
-                    console.log("data",data);
-                    setIntroduce(data.introduce);
-                }else{
-                    console.log("data is not exist");
-                }
-               }
-              
-                //아래는 직접 키를 지정할떄
-                // const docRef = doc(db,"infos","main_info");
-                // const docSnap = await getDoc(docRef);
-                
-                // if(docSnap.exists()){
-                //     setIntroduce(docSnap.data().introduce);
-                // }else{
-                //     setIntroduce("Intro data is not exist");
-                // };
-            } catch(error){
-                console.log("there are fetching info errors");
-                setIntroduce("error exists");
-            }
-        }
-
-        fetchInfo();
+    const snapshot = await getDocs(resultFireQuery);
+    console.log("fetchShopInfo");
+    if(snapshot.empty) {
+        throw new Error("No doc found");
     }
-    ,[])
+
+      const firstDoc = snapshot.docs[0];
+
+      return firstDoc.data();
+
+}
+
+const Main = () =>{
+
+    console.log("렌더main");
+    
+    //서버 데이터를 리랜더마다 호출하는 것을 방지하기 위해 React Query 사용
+    const {
+        data,
+        isLoading,
+        isError,
+        error
+    } = useQuery({
+        queryKey : ['shopInfo',1], // 원래 하드코딩 안함 변수로 지정해서 queryKey가 바뀌면 다시 queryFn를 호출해서 리패치함
+        queryFn :fetchShopInfo,
+        refetchOnMount: false,           // 다시 마운트돼도 refetch 안 함
+        refetchOnWindowFocus: false,     // 탭 다시 활성화돼도 refetch 안 함
+    });
+    
+  
+     if (isLoading) return <p>Loading...</p>; if (isError) return <p>Error: {(error as Error).message}</p>;
+
+ 
     return(
 <>
 <div>
    <h1>메인페이지 소개 </h1>
-   <p>{introduce}</p>
+   <p>{data?.introduce}</p>
 </div>
 </>
     )
