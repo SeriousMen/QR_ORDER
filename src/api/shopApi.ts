@@ -2,12 +2,12 @@ import { collection, doc, getDoc, getDocs ,query,where } from "firebase/firestor
 import { db } from "../firebase-config";
 
 export const fetchShopInfo = async (shopId : number ) =>{
-    const resultFireQuery = query(
+    const fireQuery = query(
                     collection(db,"shops"),
                     where("key", "==", shopId)
                 );
 
-    const snapshot = await getDocs(resultFireQuery);
+    const snapshot = await getDocs(fireQuery);
     console.log("fetchShopInfo");
 
     if(snapshot.empty) {
@@ -15,7 +15,23 @@ export const fetchShopInfo = async (shopId : number ) =>{
     }
 
       const firstDoc = snapshot.docs[0];
+       
+      return {id: firstDoc.id, ...firstDoc.data()} as Record<string, any>;;
 
-      return firstDoc.data();
+}
+
+
+export const fetchShopMenus = async (shopId : number, menuType : String ) =>{
+
+    //query for subcollection in collection shops
+    const menusRef = collection(db, "shops",String(shopId),"menus");
+    
+    const menusQuery = query(menusRef, where("type","==",menuType));
+
+    const snapshot = await getDocs(menusQuery);
+
+    const menus = snapshot.docs.map(doc => doc.data());
+    console.log("fetchShopMenus");
+    return menus;
 
 }
