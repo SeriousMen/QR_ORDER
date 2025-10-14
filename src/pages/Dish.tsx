@@ -21,7 +21,7 @@ const Dish = () => {
         isError:menusIsError,
         error:menusError
     } = useQuery({
-        queryKey : ['shopMenus',shopData?.id], // 
+        queryKey : ['shopMenusDish',shopData?.id], // 
         queryFn : () => fetchShopMenus(shopData?.id,'dish'),
         enabled: !!shopData?.id, 
         refetchOnMount: false,           // 다시 마운트돼도 refetch 안 함
@@ -37,7 +37,6 @@ const Dish = () => {
     return (
         <>
             Dish 입니다.
-            <p>{shopData?.introduce}</p>
             {menusData?.map((menu,idx)=>(
                 <li key ={idx}>
                     {menu.title}
